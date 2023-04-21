@@ -5,9 +5,13 @@ from settings import *
 class RayCasting:
     def __init__(self, game):
         self.game = game
+        self.ray_casting_result = []
+        self.object_to_render = []
+        self.textures = self.game.obj_render.wall_textures
     def ray_cast(self):
         ox, oy = self.game.player.pos
         x_map, y_map = self.game.player.map_pos
+        texture_vert, texture_hor = 1 , 1
         ray_angle = self.game.player.angle - HALF_FOV + 0.0001
         for ray in range(NUM_RAYS):
             sinA = sin(ray_angle)
@@ -24,6 +28,7 @@ class RayCasting:
             for i in range(MAX_DEPTH):
                 tile_hor = int(Xhor), int(Yhor)
                 if tile_hor in self.game.map.world_map:
+                    texture_hor = self.game.map.world_map[tile_hor]
                     break
                 Xhor += dx
                 Yhor += dy 
@@ -39,6 +44,7 @@ class RayCasting:
             for i in range(MAX_DEPTH):
                 tile_vert = int(Xvert), int(Yvert)
                 if tile_vert in self.game.map.world_map:
+                    texture_vert = self.game.map.world_map[tile_vert]
                     break
                 Xvert+=dx
                 Yvert += dy
@@ -46,9 +52,9 @@ class RayCasting:
                 
                 
             if depth_vert < depth_hor:
-                depth = depth_vert
+                depth, texture = depth_vert, texture_vert
             else:
-                depth = depth_hor        
+                depth, texture = depth_hor, texture_hor        
                      
             depth *= cos(self.game.player.angle - ray_angle)         
             proj_height = SCREEN_DIST / (depth + 0.0001)
