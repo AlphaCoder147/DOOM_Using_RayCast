@@ -7,7 +7,7 @@ from raycast import *
 from obj_render import *
 
 class Game:
-    def __init__(self):
+    def __init__(self):  
         pygame.init()
         self.screen = pygame.display.set_mode(RES)
         self.clock = pygame.time.Clock()
@@ -28,6 +28,7 @@ class Game:
     
     def draw(self):
         self.screen.fill('Black')
+        self.obj_render.draw()
         #self.map.draw()
         #self.player.draw()
         
