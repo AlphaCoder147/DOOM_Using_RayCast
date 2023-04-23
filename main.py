@@ -9,6 +9,7 @@ from obj_render import *
 class Game:
     def __init__(self):  
         pygame.init()
+        pg.mouse.set_visible(False)
         self.screen = pygame.display.set_mode(RES)
         self.clock = pygame.time.Clock()
         self.delta_time = 1

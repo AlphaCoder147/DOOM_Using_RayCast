@@ -1,5 +1,5 @@
 from settings import *
-import pygame as py
+import pygame as pg
 from math import *
  
 class Player:
@@ -16,25 +16,25 @@ class Player:
         speedSin = speed * sinA
         speedCos = speed * cosA
         
-        keys = py.key.get_pressed()
-        if keys[py.K_w]:
+        keys = pg.key.get_pressed()
+        if keys[pg.K_w]:
             dx += speedCos
             dy += speedSin          
-        if keys[py.K_s]:
+        if keys[pg.K_s]:
             dx += -speedCos
             dy += -speedSin  
-        if keys[py.K_a]:
+        if keys[pg.K_a]:
             dx += speedSin
             dy += -speedCos  
-        if keys[py.K_d]:
+        if keys[pg.K_d]:
             dx += -speedSin
             dy += speedCos
             
         self.check_wall_collision(dx, dy)
-        if keys[py.K_LEFT]:
-            self.angle -= PLAYER_ROT * self.game.delta_time
-        if keys[py.K_RIGHT]:
-            self.angle += PLAYER_ROT * self.game.delta_time
+        #if keys[pg.K_LEFT]:
+         #   self.angle -= PLAYER_ROT * self.game.delta_time
+        #if keys[pg.K_RIGHT]:
+        #    self.angle += PLAYER_ROT * self.game.delta_time
         self.angle %= tau    
           
     def check_walls(self, x, y):
@@ -50,10 +50,18 @@ class Player:
         #py.draw.line(self.game.screen, 'red', (self.x * 75, self.y * 75),
          #            (self.x * 75 + WIDTH * cos(self.angle),
           #            self.y * 75 + WIDTH * sin(self.angle)),2)
-        py.draw.circle(self.game.screen, 'green', (self.x * 75, self.y * 75),15)
+        pg.draw.circle(self.game.screen, 'green', (self.x * 75, self.y * 75),15)
+    def mouse_control(self):
+        mx, my = pg.mouse.get_pos()
+        if mx < MOUSE_BORDER_LEFT or mx > MOUSE_BORDER_RIGHT:
+            pg.mouse.set_pos([HALF_WIDTH, HALF_HEIGHT])
+        self.rel = pg.mouse.get_rel()[0]
+        self.rel = max(-MOUSE_MAX_REL, min(MOUSE_MAX_REL, self.rel))
+        self.angle += self.rel * MOUSE_SENS * self.game.delta_time    
     
     def update(self):
         self.move()
+        self.mouse_control()
     
     @property
     def pos(self):
