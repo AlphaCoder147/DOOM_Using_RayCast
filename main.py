@@ -5,6 +5,7 @@ from map import *
 from player import *
 from raycast import *
 from obj_render import *
+from sprite_obj import *
 
 class Game:
     def __init__(self):  
@@ -20,9 +21,15 @@ class Game:
         self.player = Player(self)
         self.obj_render = ObjectRenderer(self)
         self.raycast = RayCasting(self)
+        self.static_sprite = SpriteObj(self)
+        self.animated_sprite = AnimatedSprite(self)
+        
+        
     def update(self):
         self.player.update()
         self.raycast.update()
+        self.static_sprite.update()
+        self.animated_sprite.update()
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
         pygame.display.set_caption(f'{self.clock.get_fps() :.1f}')
