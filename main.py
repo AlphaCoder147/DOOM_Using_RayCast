@@ -7,6 +7,7 @@ from raycast import *
 from obj_render import *
 from sprite_obj import *
 from obj_handler import *
+from weapon import *
 
 class Game:
     def __init__(self):  
@@ -23,12 +24,14 @@ class Game:
         self.obj_render = ObjectRenderer(self)
         self.raycast = RayCasting(self)
         self.Objhandler = Objhandler(self)
+        self.weapon = weapon(self)
         
         
     def update(self):
         self.player.update()
         self.raycast.update()
         self.Objhandler.update()
+        self.weapon.update()
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
         pygame.display.set_caption(f'{self.clock.get_fps() :.1f}')
@@ -36,6 +39,7 @@ class Game:
     def draw(self):
         #self.screen.fill('Black')
         self.obj_render.draw()
+        self.weapon.draw()
         #self.map.draw()
         #self.player.draw()
         
