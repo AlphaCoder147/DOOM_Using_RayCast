@@ -37,7 +37,6 @@ class Game:
         pygame.display.set_caption(f'{self.clock.get_fps() :.1f}')
     
     def draw(self):
-        #self.screen.fill('Black')
         self.obj_render.draw()
         self.weapon.draw()
         #self.map.draw()
@@ -48,7 +47,7 @@ class Game:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-    
+            self.player.single_fire_event(event)
     def run(self):
         while True:
             self.check_event()
