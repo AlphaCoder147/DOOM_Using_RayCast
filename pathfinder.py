@@ -27,7 +27,7 @@ class Pathfinder:
             next_nodes = graph[cur_node]
             
             for next_node in next_nodes:
-                if next_node not in visited and next_node not in self.game.obj_handler.npc_positions:
+                if next_node not in visited and next_node not in self.game.Objhandler.npc_positions:
                     queue.append(next_node)
                     visited[next_node] = cur_node
         return visited            
@@ -40,6 +40,6 @@ class Pathfinder:
         for y, row in enumerate(self.map):
             for x, col in enumerate(row):
                 if not col:
-                    self.graph[(x, y)] = self.graph.get((x, y), []) + self.next_nodes(x, y)
+                    self.graph[(x, y)] = self.graph.get((x, y), []) + self.get_next_node(x, y)
              
         

@@ -33,8 +33,6 @@ class Game:
         self.sound = Sound(self)
         self.pathfinder = Pathfinder(self)
         
-        
-        
     def update(self):
         self.player.update()
         self.raycast.update()

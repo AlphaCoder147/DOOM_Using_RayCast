@@ -18,7 +18,7 @@ class NPC(AnimatedSprite):
         self.speed = 0.03
         self.size = 10
         self.health = 100
-        self.atrack_dmg = 10
+        self.attack_dmg = 10
         self.accuracy = 0.15
         self.alive = True
         self.pain = False
@@ -45,7 +45,7 @@ class NPC(AnimatedSprite):
         next_pos = self.game.pathfinder.get_path(self.map_pos, self.game.player.map_pos)
         nextX, nextY = next_pos
         #pg.draw.rect(self.game.screen, 'blue', (100 * nextX, 100 * nextY, 100))
-        if next_pos not in self.game.obj_handler.npc_positions:
+        if next_pos not in self.game.Objhandler.npc_positions:
             angle = atan2(nextY + 0.5 - self.y, nextX + 0.5 - self.x)
             dx = cos(angle) * self.speed
             dy = sin(angle) * self.speed
@@ -53,7 +53,9 @@ class NPC(AnimatedSprite):
     
     def attack(self):
         if self.animation_trigger:
-            self.game.sound.npc_shot.play()    
+            self.game.sound.npc_attack.play()  
+            if random() < self.accuracy:
+                self.game.player.get_damage(self.attack_dmg)  
             
     def animate_death(self):
         if not self.alive:
@@ -90,17 +92,22 @@ class NPC(AnimatedSprite):
                 self.animate_pain()
             elif self.ray_cast_value:
                 self.player_search_trigger = True
+                
                 if self.dist < self.attack_dist:
                     self.animate(self.attack_imgs)
                     self.attack()
+                    
                 else:
                     self.animate(self.walk_imgs)
-                    self.move_npc 
+                    self.move_npc()
+                     
             elif self.player_search_trigger:
                 self.animate(self.walk_imgs)
-                self.move_npc        
+                self.move_npc()        
+                
             else:    
                 self.animate(self.idle_imgs)
+                
         else:
             self.animate_death()        
                 
