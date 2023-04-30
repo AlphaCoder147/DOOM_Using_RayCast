@@ -24,13 +24,37 @@ class NPC(AnimatedSprite):
         self.pain = False
         self.ray_cast_value = False
         self.frame_cnt = 0
+        self.player_search_trigger = False
         
     def update(self):
         self.check_animation_time()
         self.get_sprite()   
         self.run_logic()
         #self.draw_raycast()
+        
+    def check_walls(self, x, y):
+        return(x,y) not in self.game.map.world_map
     
+    def check_wall_collision(self, dx, dy):     
+        if self.check_walls(int(self.x + dx * self.size), int(self.y)):
+            self.x += dx
+        if self.check_walls(int(self.x),int(self.y + dy * self.size)):
+            self.y += dy      
+    
+    def move_npc(self):
+        next_pos = self.game.pathfinder.get_path(self.map_pos, self.game.player.map_pos)
+        nextX, nextY = next_pos
+        #pg.draw.rect(self.game.screen, 'blue', (100 * nextX, 100 * nextY, 100))
+        if next_pos not in self.game.obj_handler.npc_positions:
+            angle = atan2(nextY + 0.5 - self.y, nextX + 0.5 - self.x)
+            dx = cos(angle) * self.speed
+            dy = sin(angle) * self.speed
+            self.check_wall_collision(dx, dy)
+    
+    def attack(self):
+        if self.animation_trigger:
+            self.game.sound.npc_shot.play()    
+            
     def animate_death(self):
         if not self.alive:
             if self.game.global_trigger and self.frame_cnt < len(self.death_imgs) - 1:
@@ -61,8 +85,20 @@ class NPC(AnimatedSprite):
         if self.alive:
             self.ray_cast_value = self.ray_cast_player_npc()
             self.check_npc_hit()
+            
             if self.pain:
                 self.animate_pain()
+            elif self.ray_cast_value:
+                self.player_search_trigger = True
+                if self.dist < self.attack_dist:
+                    self.animate(self.attack_imgs)
+                    self.attack()
+                else:
+                    self.animate(self.walk_imgs)
+                    self.move_npc 
+            elif self.player_search_trigger:
+                self.animate(self.walk_imgs)
+                self.move_npc        
             else:    
                 self.animate(self.idle_imgs)
         else:

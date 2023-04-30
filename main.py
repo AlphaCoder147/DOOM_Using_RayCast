@@ -9,6 +9,7 @@ from sprite_obj import *
 from obj_handler import *
 from weapon import *
 from sound import *
+from pathfinder import *
 
 class Game:
     def __init__(self):  
@@ -30,6 +31,8 @@ class Game:
         self.Objhandler = Objhandler(self)
         self.weapon = weapon(self)
         self.sound = Sound(self)
+        self.pathfinder = Pathfinder(self)
+        
         
         
     def update(self):
